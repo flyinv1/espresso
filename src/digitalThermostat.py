@@ -1,13 +1,11 @@
 
-class DigitalThermoStat:
+class DigitalThermostat:
     """ Digital thermostat
 
         All units in °C
     """
 
-    def __init__(self):
-        self.temp = 20
-
+    def __init__(self, temperatureSensor, heaterOutput):
         # Target temperature
         self.target = 20
 
@@ -17,36 +15,32 @@ class DigitalThermoStat:
         # Maximumum switching frequency of control input
         self.max_freq = 1
 
-        # Redlines - tuple (min, max)
-        self.redlines = (20, 100)
+        self.sensor = temperatureSensor
+        self.output = heaterOutput
 
-    @property
-    def output(self):
-        # Output is read-only
-        self.output = 0
+    def setSensor(self, sensor):
+        self.sensor = sensor
 
-    def update(self, temp):
+    def setOutput(self, output):
+        self.output = output
+
+    def update(self):
         # Input temperature °C
 
         # Control logic
         output = 0
 
-        if self.temp > self.target + self.band:
+        temp = self.sensor.latest()
+
+        if temp > self.target + self.band:
             output = 1
-        elif self.temp < self.target - self.band:
+        elif temp < self.target - self.band:
             output = 0
         else:
-            output = self.output
+            output = self.output.latest()
 
-        if self.temp > self.redlines(1):
-            # Temperature too high
-            output = 0
-            # Raise redline high error
-        elif self.temp < self.redlines(0):
-            # Temperature too low
-            output = 0
-            # Raise redline low error
+        self.output.write(output)
 
-        self.output = output
-
+    def override(self, output):
+        self.output.write(output)
 

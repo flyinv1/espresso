@@ -17,20 +17,20 @@ class MultiplexerCD74():
             self.enable = machine.Signal(en, invert=True)
         self.selector = (self.d1, self.d2, self.d3, self.d4)
 
-        self.data = np.zeros(ADDR_LEN)
+        self.data = np.zeros(self.ADDR_LEN)
 
     def read(self):
         self.sample_all()
         return self.data
 
     def sample_all(self):
-        for i, addr in enumeate(range(ADDR_LEN)):
+        for i, addr in enumerate(range(self.ADDR_LEN)):
             self.data[i] = self.sample_addr(addr)
 
     def sample_addr(self, addr):
         if self.enable:
             self.enable.on()
-        if addr < 0 or addr > ADDR_LEN:
+        if addr < 0 or addr > self.ADDR_LEN:
             # invalid address
             pass
 

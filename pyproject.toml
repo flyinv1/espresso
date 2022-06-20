@@ -6,6 +6,9 @@ authors = ["Matt Vredevoogd <flyinv1@gmail.com>"]
 
 [tool.poetry.dependencies]
 python = "^3.9"
+PyQt6 = "^6.3.0"
+numpy = "^1.22.3"
+dotenv = "^0.19.2"
 
 [tool.poetry.dev-dependencies]
 
