@@ -1,0 +1,44 @@
+channels:
+  -
+    device: "LED-00"
+    default: True
+    name: "Status LED"
+  -
+    device: "SV-00"
+    name: "Grouphead Run"
+  -
+    device: "SV-01"
+    name: "Boiler Supply"
+  -
+    device: "SV-02"
+    name: "Steam Run"
+  -
+    device: "HT-00"
+    name: "Grouphead Heater"
+  -
+    device: "HT-01"
+    name: "Boiler Heater"
+  -
+    device: "PT-00"
+    name: "Grouphead Pressure"
+  -
+    device: "TD-00"
+    name: "Grouphead Temperature"
+  -
+    device: "SW-00"
+    name: "Boiler Enable"
+    write: False
+  -
+    device: "SW-01"
+    name: "Group Enable"
+    write: False
+  -
+    device: "SW-02"
+    name: "Mode Select"
+    write: False
+  -
+    device: "SW-03"
+    name: "Empty"
+    write: False
+
+

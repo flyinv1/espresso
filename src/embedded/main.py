@@ -3,6 +3,7 @@ from os import sys, environ
 from espressomanager import EspressoManager
 import dotenv
 
+
 dotenv.load_dotenv()
 
 if "ENV" in environ:
@@ -28,12 +29,16 @@ if __name__ == "__main__":
 
 
     if env == "PROD":
-        from iocontroller import IOController
-
-        io = IOController()
-        manager = EspressoManager(io)
 
         while True:
-            manager.main()
+            
+
+        # from iocontroller import IOController
+
+        # io = IOController()
+        # manager = EspressoManager(io)
+
+        # while True:
+        #     manager.main()
 
 
