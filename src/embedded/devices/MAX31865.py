@@ -34,7 +34,7 @@ class MAX31865:
 
         self.enable_3wire(True)
         self.enable_auto(True)
-        self.enable_bias(False)
+        self.enable_bias(True)
         self.enable_50Hz(False)
 
     def temp(self):
@@ -48,27 +48,27 @@ class MAX31865:
     def enable_auto(self, auto: bool):
         # Set the conversion mode
         # If true, the chip will perform conversions automatically at a 50 or 60 hz rate.
-        self.write_config(_DPOS_CONV, auto)
+        self.write_config_bit(_DPOS_CONV, auto)
 
     def enable_bias(self, bias: bool):
-        self.write_config(_DPOS_VBIAS, bias)
+        self.write_config_bit(_DPOS_VBIAS, bias)
 
     def enable_50Hz(self, enable: bool):
-        self.write_config(_DPOS_FILT, enable)
+        self.write_config_bit(_DPOS_FILT, enable)
 
     def enable_3wire(self, enable: bool):
         # If true, enable 3 wire sensing, otherwise 2/4 wire shall be used
-        self.write_config(_DPOS_NWIRE, enable)
+        self.write_config_bit(_DPOS_NWIRE, enable)
 
     def enable_1shot(self, enable: bool):
         # If true, set to one-shot mode
-        self.write_config(_DPOS_SHOT, enable)
+        self.write_config_bit(_DPOS_SHOT, enable)
 
     def clear_fault(self):
         # self.write_config(_DPOS_FAULT_STATUS, True)
-        self.write_config(_DPOS_CLEAR_FAULT, True)
+        self.write_config_bit(_DPOS_CLEAR_FAULT, True)
 
-    def write_config(self, config, enable: bool):
+    def write_config_bit(self, config, enable: bool):
         c = self.read_u8(_REG_CONFIG)
         if enable:
             new_config = c | config
@@ -96,6 +96,11 @@ class MAX31865:
         msb = _b[0]
         lsb = _b[1]
         self.cs(1)
+
+        if lsb & 0x01:
+            self.clear_fault()
+            print("fault detected :)")
+
         return (msb << 7) | (lsb >> 1) 
 
 

@@ -1,43 +1,43 @@
 import machine
 import time
 
-# bin_map = [
-#     [0, 0, 0, 0],
-#     [0, 0, 0, 1],
-#     [0, 0, 1, 0],
-#     [0, 0, 1, 1],
-#     [0, 1, 0, 0],
-#     [0, 1, 0, 1],
-#     [0, 1, 1, 0],
-#     [0, 1, 1, 1],
-#     [1, 0, 0, 0],
-#     [1, 0, 0, 1],
-#     [1, 0, 1, 0],
-#     [1, 0, 1, 1],
-#     [1, 1, 0, 0],
-#     [1, 1, 0, 1],
-#     [1, 1, 1, 0],
-#     [1, 1, 1, 1],
-# ]
-
 bin_map = [
     [0, 0, 0, 0],
-    [1, 0, 0, 0],
-    [0, 1, 0, 0],
-    [1, 1, 0, 0],
     [0, 0, 0, 1],
-    [1, 0, 0, 1],
-    [0, 1, 0, 1],
-    [1, 1, 0, 1],
     [0, 0, 1, 0],
-    [1, 0, 1, 1],
-    [0, 1, 1, 0],
-    [1, 1, 1, 0],
     [0, 0, 1, 1],
-    [1, 0, 1, 1],
+    [0, 1, 0, 0],
+    [0, 1, 0, 1],
+    [0, 1, 1, 0],
     [0, 1, 1, 1],
+    [1, 0, 0, 0],
+    [1, 0, 0, 1],
+    [1, 0, 1, 0],
+    [1, 0, 1, 1],
+    [1, 1, 0, 0],
+    [1, 1, 0, 1],
+    [1, 1, 1, 0],
     [1, 1, 1, 1],
 ]
+
+# bin_map = [
+#     [0, 0, 0, 0],
+#     [1, 0, 0, 0],
+#     [0, 1, 0, 0],
+#     [1, 1, 0, 0],
+#     [0, 0, 0, 1],
+#     [1, 0, 0, 1],
+#     [0, 1, 0, 1],
+#     [1, 1, 0, 1],
+#     [0, 0, 1, 0],
+#     [1, 0, 1, 1],
+#     [0, 1, 1, 0],
+#     [1, 1, 1, 0],
+#     [0, 0, 1, 1],
+#     [1, 0, 1, 1],
+#     [0, 1, 1, 1],
+#     [1, 1, 1, 1],
+# ]
 
 class MultiplexerCD74():
 
@@ -75,8 +75,6 @@ class MultiplexerCD74():
 
     def sample_addr(self, addr, latch_pins=False):
 
-        self.enable(1)
-
         if addr < 0 or addr >= self.ADDR_LEN:
             return 0.0 # Invalid address
 
@@ -97,10 +95,8 @@ class MultiplexerCD74():
         # binary_arr.reverse()
 
         for i, pin in enumerate(self.selector):
-            pin(1) if binary_arr[i] else pin(0)
-        
-        time.sleep(0.001)
-        
+            pin(1) if binary_arr[3 - i] else pin(0)
+                
         value = self.adc.read_u16()
 
         if not latch_pins:
@@ -110,6 +106,5 @@ class MultiplexerCD74():
 
 
     def reset(self):
-        self.enable(0)
         for pin in self.selector:
             pin(0)

@@ -7,34 +7,34 @@ from select import poll, POLLIN
 import math
 import random
 
-from devices.multiplexerCD74 import MultiplexerCD74
+# from devices.multiplexerCD74 import MultiplexerCD74
 from devices.RGBLED import RGBLED
 import devices.MAX31865 as RTD
 
 # # These colors don't represent the real RGB color
 # # They are 'perceived' output from the LED, since it 
 # # is largely dominated by red
-orange = (200, 255, 0)
+# orange = (200, 255, 0)
 # # blue = (20, 120, 255)
 # # green = (60, 255, 120)
 
 # # # Frequency
-datarate = 5
+datarate = 1
 
-devices = {
-    "IO-00": machine.Pin(25, machine.Pin.OUT),
-    "SV-00": machine.Pin(9, machine.Pin.OUT),
-    "SV-01": machine.Pin(14, machine.Pin.OUT),
-    "SV-02": machine.Pin(15, machine.Pin.OUT),
-    "HT-00": machine.Pin(8, machine.Pin.OUT),
-    "HT-01": machine.Pin(7, machine.Pin.OUT)
-}
+# devices = {
+#     "IO-00": machine.Pin(25, machine.Pin.OUT),
+#     "SV-00": machine.Pin(9, machine.Pin.OUT),
+#     "SV-01": machine.Pin(14, machine.Pin.OUT),
+#     "SV-02": machine.Pin(15, machine.Pin.OUT),
+#     "HT-00": machine.Pin(8, machine.Pin.OUT),
+#     "HT-01": machine.Pin(7, machine.Pin.OUT)
+# }
 
-sensors = {
-    "PT-00": 0,
-    "PT-01": 1,
-    "PT-02": 2,
-}
+# sensors = {
+#     "PT-00": 0,
+#     "PT-01": 1,
+#     "PT-02": 2,
+# }
 
 # mux = MultiplexerCD74(26, 2, 6, 5, 4, 3)
 # mux = MultiplexerCD74(
@@ -46,7 +46,7 @@ sensors = {
 #     machine.Pin(13, machine.Pin.OUT, value=0)
 # )
 
-poller = poll()
+# poller = poll()
 
 # def command_device(device_id, value):
 #     try:
@@ -101,31 +101,30 @@ if __name__ == "__main__":
                   sck=machine.Pin(2), 
                   mosi=machine.Pin(3), 
                   miso=machine.Pin(4))
+    spi.init()
 
     rtd_boiler = RTD.MAX31865(spi=spi, cs=machine.Pin(5, machine.Pin.OUT, value=1))
-    rtd_group = RTD.MAX31865(spi=spi, cs=machine.Pin(6, machine.Pin.OUT, value=1))
+    # rtd_group = RTD.MAX31865(spi=spi, cs=machine.Pin(6, machine.Pin.OUT, value=1))
 
-    
+    # Loop index
+    i = 0
+    t = 0
+    t_last = 0
 
-# #     # Loop index
-#     i = 0
-#     t = 0
-#     t_last = 0
+    while True:
+        i += 1
+        t = time.ticks_ms()
+        if (t - t_last) / 1000 > (1 / datarate):
+            t_last = t
 
-#     while True:
-#         i += 1
-#         t = time.ticks_ms()
-#         if (t - t_last) / 1000 > (1 / datarate):
-#             t_last = t
-
-#             print(rtd_boiler.resistance(), rtd_boiler.temp())
-#             print(rtd_group.resistance(), rtd_group.temp())
+            print(rtd_boiler.resistance(), rtd_boiler.temp())
+            # print(rtd_group.resistance(), rtd_group.temp())
             
-#             rgb = RGBLED(18, 19, 20)
-#             rgb.set(*orange)
+            # rgb = RGBLED(18, 19, 20)
+            # rgb.set(*orange)
 
-#             # m = mux.read()
-#             # print("\t".join(["{:05d}".format(_m) for _m in m]))
+            # m = mux.read()
+            # print("\t".join(["{:05d}".format(_m) for _m in m]))
 
 
 #     # print("okay")
