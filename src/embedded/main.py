@@ -22,46 +22,6 @@ class State():
 # Initialize Machine input / ouput
 mio = MachineIO()
 
-"""Primary SPI bus used to communicate with breakout devices
-    - MAX31865 (x2) for RTD amplification
-    - ST7735 (x1) LED panel driver board 
-"""
-spi = SoftSPI(
-    baudrate=115200,
-    polarity=0,
-    phase=0,    
-    sck=Pin(2),
-    mosi=Pin(3),
-    miso=Pin(4)
-)
-
-mux = MUX(
-    ADC(26),
-    Pin(27, Pin.OUT, value=1), # MUX enable
-    Pin(21, Pin.OUT, value=0), # S0
-    Pin(20, Pin.OUT, value=0), # S1
-    Pin(19, Pin.OUT, value=0), # S2
-    Pin(18, Pin.OUT, value=0)  # S3
-)
-
-"""Primary board outputs"""
-### Outputs
-onboard_led = Pin(25, Pin.OUT, value=1)     # Default to this LED being on when the board is powered
-sv_group = Pin(9, Pin.OUT, value=0)         # Grouphead run valve
-sv_fill = Pin(13, Pin.OUT, value=0)         # Boiler fill valve
-sv_steam = Pin(12, Pin.OUT, value=0)        # Boiler steam valve
-h_boiler = Pin(11, Pin.OUT, value=0)        # Boiler heater
-h_group = Pin(10, Pin.OUT, value=0)         # Group heater
-pump = Pin(28, Pin.OUT, value=0)            # Pump run pin
-
-"""Primary board inputs"""
-T_boiler = MAX31865(spi, Pin(5, Pin.OUT))   # Boiler temperature (C)
-T_group = MAX31865(spi, Pin(6, Pin.OUT))    # Grouphead temperature (C)
-run_button = Pin(16, Pin.IN, Pin.PULL_DOWN) # Run button input
-
-"""Status LED"""
-status_led = rgb(17, 15, 14)
-
 """Primary loop frequency"""
 f_primary = 1
 f_heater = 5

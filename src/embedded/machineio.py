@@ -1,8 +1,12 @@
 from machine import (Pin, SPI, ADC, SoftSPI)
+import time
 
 from devices.RGBLED import RGBLED as rgb
 from devices.MAX31865 import MAX31865
 from devices.multiplexerCD74 import MultiplexerCD74 as MUX
+from util import (
+    clamp
+)
 
 LED_PIN = 25
 SV_GROUP_PIN = 9
@@ -11,6 +15,9 @@ SV_STEAM_PIN = 12
 H_BOILER_PIN = 11
 H_GROUP_PIN = 10
 PUMP_PIN = 28
+
+MAX_RATE = 200
+MIN_RATE = 1
 
 class MachineIO:
 
@@ -58,5 +65,16 @@ class MachineIO:
                 mosi=Pin(3),
                 miso=Pin(4)
             )
+
+    def update(self):
+        pass
+
+    @property.setter
+    def sample_frequency(self, rate):
+        self._sample_frequency = clamp(rate, [MIN_RATE, MAX_RATE])
+
+    @property.getter
+    def sample_frequency(self):
+        return self._sample_frequency
 
     # @property
