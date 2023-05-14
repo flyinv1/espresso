@@ -11,9 +11,9 @@ class RGBLED:
         self.g = machine.PWM(g_pin)
         self.b = machine.PWM(b_pin)
 
-        self.r.freq(1000)
-        self.g.freq(1000)
-        self.b.freq(1000)
+        self.r.freq(10000)
+        self.g.freq(10000)
+        self.b.freq(10000)
 
         self.r.duty_u16(int(0))
         self.g.duty_u16(int(0))

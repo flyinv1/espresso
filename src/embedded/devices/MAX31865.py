@@ -37,6 +37,8 @@ class MAX31865:
         self.enable_bias(True)
         self.enable_50Hz(False)
 
+        self.fault = False
+
     def temp(self):
         res = self.resistance()
         return (res / self.nom_resistance - 1) / 0.00385
@@ -67,8 +69,10 @@ class MAX31865:
     def clear_fault(self):
         # self.write_config(_DPOS_FAULT_STATUS, True)
         self.write_config_bit(_DPOS_CLEAR_FAULT, True)
+        self.fault = False
 
     def write_config_bit(self, config, enable: bool):
+        self.cs(0)
         c = self.read_u8(_REG_CONFIG)
         if enable:
             new_config = c | config
@@ -76,7 +80,21 @@ class MAX31865:
         else:
             new_config = c & ~config
             self.write_u8(_REG_CONFIG | 0x80, new_config)
+        self.cs(1)
         
+    def read_fault(self):
+        self.cs(0)
+        self.spi.write(bytes([_REG_FAULT_STATUS]))
+        fault_status = self.spi.read(1)[0]
+        self.cs(1)
+        return fault_status
+    
+    def read_high_fault(self):
+        return self.read_u16(0x03)
+    
+    def read_low_fault(self):
+        return self.read_u16(0x05)
+
     def write_u8(self, address, value):
         self.cs(0)
         self.spi.write(bytes([address, value]))
@@ -98,8 +116,7 @@ class MAX31865:
         self.cs(1)
 
         if lsb & 0x01:
-            self.clear_fault()
-            print("fault detected :)")
+            self.fault = True
 
         return (msb << 7) | (lsb >> 1) 
 

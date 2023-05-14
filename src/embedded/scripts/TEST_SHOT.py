@@ -94,11 +94,11 @@ if __name__ == "__main__":
         print(t)
 
     group_heater(1)
-    pump(1)
-    time.sleep(0.2)
     run_valve(1)
+    time.sleep(0.5)
+    pump(1)
 
-    t = 7
+    t = 5
     while t > 0:
         t -= 0.05
         time.sleep(0.05)
